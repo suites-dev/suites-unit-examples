@@ -8,17 +8,22 @@
     "test": "tsc --noEmit && vitest run"
   },
   "dependencies": {
-    "inversify": "^6.0.3",
+    "inversify": "^8.2.3",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
-    "@suites/di.inversify": "^3.0.1",
-    "@suites/doubles.vitest": "^3.0.1",
-    "@suites/unit": "^3.0.1",
-    "@types/node": "^22.10.2",
-    "typescript": "^5.7.2",
-    "unplugin-swc": "^1.5.1",
-    "vitest": "^2.1.8"
+    "@suites/di.inversify": "4.0.0-next.0",
+    "@suites/doubles.vitest": "4.0.0-next.0",
+    "@suites/unit": "4.0.0-next.0",
+    "@types/node": "^26.6.6",
+    "typescript": "~6.0.3",
+    "unplugin-swc": "^2.0.0",
+    "vitest": "5.1.0",
+    "@swc/core": "^1.16.21",
+    "@vitest/spy": "5.1.0"
   },
-  "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
+  "packageManager": "pnpm@12.16.1",
+  "engines": {
+    "node": "^22.22.2 || ^24.15.0 || ^26.0.0"
+  }
 }

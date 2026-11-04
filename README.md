@@ -12,22 +12,45 @@ If you are new to Suites, check out the [Getting Started](https://suites.dev/doc
 | ---------------------------------------------- | ------------ | ----------- | ------------------------------------------------- |
 | [nestjs-jest](./nestjs-jest)                   | NestJS       | Jest        | NestJS with Jest                                  |
 | [nestjs-vitest](./nestjs-vitest)               | NestJS       | Vitest      | NestJS with Vitest                                |
-| [nestjs-sinon](./nestjs-sinon)                 | NestJS       | Sinon       | NestJS with Sinon/Mocha                           |
 | [inversify-jest](./inversify-jest)             | InversifyJS  | Jest        | InversifyJS with Jest                             |
 | [inversify-vitest](./inversify-vitest)         | InversifyJS  | Vitest      | InversifyJS with Vitest                           |
-| [inversify-sinon](./inversify-sinon)           | InversifyJS  | Sinon       | InversifyJS with Sinon/Mocha                      |
 | [advanced-mock-config](./advanced-mock-config) | NestJS       | Jest        | Advanced `.mock().final()` and `.impl()` patterns |
 
-## Quick Start
+## Prepare the master packages
+
+These examples test Suites 4 packages built from `suites-dev/unit` master at commit [`23422b3`](https://github.com/suites-dev/unit/commit/23422b3be202cd0b2b062e69514f2f7bada6613a). The exact revision and package versions are recorded in [suites-source.json](suites-source.json). This snapshot is `4.0.0-next.0`; it does not require a public npm prerelease.
+
+Use **Node 26** and **pnpm 12.16.1** to build the packages once from the repository root:
 
 ```bash
-# Clone and run any example
+node scripts/prepare-suites.mjs
 cd nestjs-jest
-pnpm install
+pnpm install --frozen-lockfile --strict-peer-dependencies
 pnpm test
 ```
 
-All tests should pass immediately, demonstrating both testing strategies.
+The helper fetches the pinned source, builds all nine public packages, and packs them into the ignored `.suites-packages/` directory. Each example's pnpm overrides install those tarballs, including transitive Suites dependencies. Nothing is published to npm, and the examples do not link to the source workspace.
+
+You can use an existing clean checkout at the pinned commit instead of downloading it:
+
+```bash
+node scripts/prepare-suites.mjs /path/to/unit-checkout
+```
+
+After preparation, run any example independently with `pnpm install --frozen-lockfile` and `pnpm test`. Tests first type-check the example, then exercise its solitary and sociable scenarios. CI repeats this for all five examples on Node 22, 24, and 26.
+
+To test a newer master commit, update `suites-source.json`, align the examples' Suites versions with that source, rebuild the tarballs, and regenerate the example lockfiles with `pnpm install --no-frozen-lockfile`.
+
+## Type integration
+
+Each example includes `global.d.ts` with one test-double `/unit` reference and one DI `/metadata` reference. For NestJS with Jest:
+
+```typescript
+/// <reference types="@suites/doubles.jest/unit" />
+/// <reference types="@suites/di.nestjs/metadata" />
+```
+
+Use `doubles.vitest` for Vitest and `di.inversify` for Inversify. These declarations are included in each test tsconfig. Suites no longer installs or edits type augmentations through postinstall hooks.
 
 ## Testing Strategies
 
@@ -72,7 +95,7 @@ Both strategies are unit tests - they keep external I/O mocked and remain fast. 
 
 - **Solitary unit tests** - Test one class in complete isolation with all dependencies mocked
 - **Sociable unit tests** - Test multiple classes together with real collaborators, external I/O mocked
-- **Type-safe mocking** - Full TypeScript support without manual setup
+- **Type-safe mocking** - TypeScript support through explicit adapter references
 - **Zero boilerplate** - No test module configuration required
 
 ## Common Use Case
@@ -98,10 +121,8 @@ This consistent domain model makes it easy to compare different framework and te
 examples/
 ├── nestjs-jest/          # NestJS with Jest
 ├── nestjs-vitest/        # NestJS with Vitest
-├── nestjs-sinon/         # NestJS with Sinon
 ├── inversify-jest/       # InversifyJS with Jest
 ├── inversify-vitest/     # InversifyJS with Vitest
-├── inversify-sinon/      # InversifyJS with Sinon
 └── advanced-mock-config/ # Advanced .mock().final() and .impl() patterns
 ```
 
@@ -121,17 +142,18 @@ Each example contains two directories:
 
 ## Prerequisites
 
-- Node.js 18 or higher
-- pnpm installed globally
+- Node 26 to build the pinned source packages
+- Node.js 22.22.2+, 24.15.0+, or 26.x to run examples
+- pnpm 12.16.1
 - Basic understanding of TypeScript and dependency injection
 
 ## Troubleshooting
 
 ### Tests fail after install
 
-1. Check Node.js version: `node --version` (requires 18+)
+1. Check Node.js version: `node --version` (supported lines: 22.22.2+, 24.15.0+, or 26.x)
 2. Check pnpm: `pnpm --version`
-3. Clear and reinstall: `rm -rf node_modules && pnpm install`
+3. Prepare the source packages, then reinstall: `pnpm install --frozen-lockfile`
 4. Verify working directory is the example directory, not repository root
 
 ### "reflect-metadata" errors (InversifyJS examples)
@@ -142,13 +164,9 @@ InversifyJS requires decorator metadata. Configuration is already set in `tsconf
 - `emitDecoratorMetadata: true` in tsconfig.json
 - `import 'reflect-metadata'` at top of test files
 
-### Sinon tests show different output format
-
-Sinon uses Mocha test runner, which formats output differently than Jest/Vitest. All examples show 6 passing tests.
-
 ### "Module not found" errors
 
-Run `pnpm install` in the specific example directory. Each example has standalone dependencies.
+Run `pnpm install` in the specific example directory. Each example has standalone dependencies. Prepare `.suites-packages/` from the repository root first.
 
 ## Learn More
 

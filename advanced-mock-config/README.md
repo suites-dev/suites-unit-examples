@@ -4,8 +4,9 @@ Simple user management example demonstrating [Suites](https://suites.dev) with N
 
 ## Prerequisites
 
-- Node.js 18 or higher
-- pnpm installed globally
+- Node.js 22.22.2+, 24.15.0+, or 26.x
+- pnpm 12.16.1
+- Packed Suites source prepared with Node 26 using the [repository setup](../README.md#prepare-the-master-packages)
 
 ## What This Demonstrates
 
@@ -19,7 +20,7 @@ Simple user management example demonstrating [Suites](https://suites.dev) with N
 ## Running the Example
 
 ```bash
-pnpm install
+pnpm install --frozen-lockfile
 pnpm test
 ```
 
@@ -56,7 +57,7 @@ const { unit, unitRef } = await TestBed.solitary(UserService)
   .mock(UserValidator)
   .final({
     // Plain functions - cannot be reconfigured in tests
-    validate: () => ({ isValid: true, errors: [] })
+    validate: () => ({ isValid: true, errors: [] }),
   })
   .compile();
 ```
@@ -77,12 +78,12 @@ const { unit, unitRef } = await TestBed.solitary(UserService)
   .mock(UserValidator)
   .impl((stubFn) => ({
     // Stubs - can be reconfigured and inspected in tests
-    validate: stubFn().mockReturnValue({ isValid: true, errors: [] })
+    validate: stubFn().mockReturnValue({ isValid: true, errors: [] }),
   }))
   .compile();
 
 // Later in tests, you can override:
-validator.validate.mockReturnValue({ isValid: false, errors: ['Error'] });
+validator.validate.mockReturnValue({ isValid: false, errors: ["Error"] });
 ```
 
 **Key characteristics:**
@@ -108,13 +109,13 @@ validator.validate.mockReturnValue({ isValid: false, errors: ['Error'] });
 
 ## Comparison Table
 
-| Feature                | `.final()`       | `.impl()`         |
-| ---------------------- | ---------------- | ----------------- |
-| Reconfigurable         | ❌ No            | ✅ Yes            |
-| Call inspection        | ❌ No            | ✅ Yes            |
-| Function type          | Plain functions  | Jest stubs        |
-| `mockReturnValue()`    | ❌ Cannot use    | ✅ Can use        |
-| `toHaveBeenCalled()`   | ❌ Cannot use    | ✅ Can use        |
+| Feature              | `.final()`      | `.impl()`  |
+| -------------------- | --------------- | ---------- |
+| Reconfigurable       | ❌ No           | ✅ Yes     |
+| Call inspection      | ❌ No           | ✅ Yes     |
+| Function type        | Plain functions | Jest stubs |
+| `mockReturnValue()`  | ❌ Cannot use   | ✅ Can use |
+| `toHaveBeenCalled()` | ❌ Cannot use   | ✅ Can use |
 
 ## Related Examples
 
@@ -127,3 +128,14 @@ validator.validate.mockReturnValue({ isValid: false, errors: ['Error'] });
 - [Suites Documentation](https://suites.dev)
 - [Mock Configuration API](https://suites.dev/docs/api-reference/mock-configuration)
 - [Test Doubles Guide](https://suites.dev/docs/guides/test-doubles)
+
+## Type references
+
+The included `global.d.ts` loads both the test-double types and the DI metadata types:
+
+```typescript
+/// <reference types="@suites/doubles.jest/unit" />
+/// <reference types="@suites/di.nestjs/metadata" />
+```
+
+Keep this file included in your test `tsconfig.json`. Suites 4 does not modify declaration files during installation.

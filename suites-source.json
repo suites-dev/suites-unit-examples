@@ -1,0 +1,67 @@
+{
+  "repository": "https://github.com/suites-dev/unit.git",
+  "commit": "23422b3be202cd0b2b062e69514f2f7bada6613a",
+  "packages": [
+    {
+      "name": "@suites/core.unit",
+      "version": "4.0.0-next.0",
+      "path": "packages/core",
+      "tarball": "suites-core.unit.tgz"
+    },
+    {
+      "name": "@suites/di.inversify",
+      "version": "4.0.0-next.0",
+      "path": "packages/di/inversify",
+      "tarball": "suites-di.inversify.tgz"
+    },
+    {
+      "name": "@suites/di.nestjs",
+      "version": "4.0.0-next.0",
+      "path": "packages/di/nestjs",
+      "tarball": "suites-di.nestjs.tgz"
+    },
+    {
+      "name": "@suites/doubles.jest",
+      "version": "4.0.0-next.0",
+      "path": "packages/doubles/jest",
+      "tarball": "suites-doubles.jest.tgz"
+    },
+    {
+      "name": "@suites/doubles.vitest",
+      "version": "4.0.0-next.0",
+      "path": "packages/doubles/vitest",
+      "tarball": "suites-doubles.vitest.tgz"
+    },
+    {
+      "name": "@suites/types.common",
+      "version": "4.0.0-next.0",
+      "path": "packages/types/common",
+      "tarball": "suites-types.common.tgz"
+    },
+    {
+      "name": "@suites/types.di",
+      "version": "4.0.0-next.0",
+      "path": "packages/types/di",
+      "tarball": "suites-types.di.tgz"
+    },
+    {
+      "name": "@suites/types.doubles",
+      "version": "4.0.0-next.0",
+      "path": "packages/types/doubles",
+      "tarball": "suites-types.doubles.tgz"
+    },
+    {
+      "name": "@suites/unit",
+      "version": "4.0.0-next.0",
+      "path": "packages/unit",
+      "tarball": "suites-unit.tgz"
+    }
+  ],
+  "examples": [
+    "advanced-mock-config",
+    "inversify-jest",
+    "inversify-vitest",
+    "nestjs-jest",
+    "nestjs-vitest"
+  ]
+}

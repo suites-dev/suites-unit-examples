@@ -4,8 +4,9 @@ Simple user management example demonstrating [Suites](https://suites.dev) with I
 
 ## Prerequisites
 
-- Node.js 18 or higher
-- pnpm installed globally
+- Node.js 22.22.2+, 24.15.0+, or 26.x
+- pnpm 12.16.1
+- Packed Suites source prepared with Node 26 using the [repository setup](../README.md#prepare-the-master-packages)
 
 ## What This Demonstrates
 
@@ -17,7 +18,7 @@ Simple user management example demonstrating [Suites](https://suites.dev) with I
 ## Running the Example
 
 ```bash
-pnpm install
+pnpm install --frozen-lockfile
 pnpm test
 ```
 
@@ -70,11 +71,13 @@ const database: Mocked<Database> = unitRef.get(DATABASE_TOKEN);
 ## Comparing Testing Strategies
 
 **When to use Solitary:**
+
 - Testing component logic in isolation
 - Controlling all inputs for predictable results
 - Dependencies are slow or complex to set up
 
 **When to use Sociable:**
+
 - Verifying components work together correctly
 - Testing interactions between business logic components
 - Dependencies are fast
@@ -82,7 +85,6 @@ const database: Mocked<Database> = unitRef.get(DATABASE_TOKEN);
 ## Related Examples
 
 - [inversify-jest](../inversify-jest) - Same framework with Jest
-- [inversify-sinon](../inversify-sinon) - Same framework with Sinon/Mocha
 - [nestjs-vitest](../nestjs-vitest) - NestJS with Vitest
 
 ## Learn More
@@ -90,3 +92,14 @@ const database: Mocked<Database> = unitRef.get(DATABASE_TOKEN);
 - [Suites Documentation](https://suites.dev)
 - [InversifyJS Integration](https://suites.dev/docs/inversify)
 - [Testing Strategies](https://suites.dev/docs/testing-strategies)
+
+## Type references
+
+The included `global.d.ts` loads both the test-double types and the DI metadata types:
+
+```typescript
+/// <reference types="@suites/doubles.vitest/unit" />
+/// <reference types="@suites/di.inversify/metadata" />
+```
+
+Keep this file included in your test `tsconfig.json`. Suites 4 does not modify declaration files during installation.

@@ -1,0 +1,20 @@
+# Install all Suites packages from the pinned source build, including transitive dependencies.
+packages: []
+overrides:
+  '@suites/core.unit': 'file:../.suites-packages/suites-core.unit.tgz'
+  '@suites/di.inversify': 'file:../.suites-packages/suites-di.inversify.tgz'
+  '@suites/di.nestjs': 'file:../.suites-packages/suites-di.nestjs.tgz'
+  '@suites/doubles.jest': 'file:../.suites-packages/suites-doubles.jest.tgz'
+  '@suites/doubles.vitest': 'file:../.suites-packages/suites-doubles.vitest.tgz'
+  '@suites/types.common': 'file:../.suites-packages/suites-types.common.tgz'
+  '@suites/types.di': 'file:../.suites-packages/suites-types.di.tgz'
+  '@suites/types.doubles': 'file:../.suites-packages/suites-types.doubles.tgz'
+  '@suites/unit': 'file:../.suites-packages/suites-unit.tgz'
+minimumReleaseAgeExclude:
+  - '@vitest/spy@5.1.0'
+  - '@vitest/mocker@5.1.0'
+  - 'vitest@5.1.0'
+allowBuilds:
+  '@swc/core': true
+  '@parcel/watcher': true
+  '@nestjs/core': false
