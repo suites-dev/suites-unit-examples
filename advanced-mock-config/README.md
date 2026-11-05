@@ -1,141 +1,73 @@
-# Suites + NestJS + Jest (Advanced Mock Configuration)
+# Suites + NestJS + Jest: Mock Configuration
 
-Simple user management example demonstrating [Suites](https://suites.dev) with NestJS and Jest, showcasing advanced mock configuration patterns using `.mock().final()` and `.mock().impl()`.
+Compare `.mock().final()` and `.mock().impl()` in solitary and sociable tests using the same user service as the other examples.
 
-## Prerequisites
+## Run
 
-- Node.js 22.22.2+, 24.15.0+, or 26.x
-- pnpm 12.16.1
-- Packed Suites source prepared with Node 26 using the [repository setup](../README.md#prepare-the-master-packages)
+Use Node.js `^22.22.2 || ^24.15.0 || ^26.0.0` and pnpm 12.16.1. From this directory:
 
-## What This Demonstrates
-
-- ✅ **Solitary unit tests** - Test UserService in complete isolation
-- ✅ **Sociable unit tests** - Test components together with real validation, mocked I/O
-- ✅ **`.mock().final()`** - Immutable mock configuration with plain functions
-- ✅ **`.mock().impl()`** - Flexible mock configuration with stub functions
-- ✅ **Token injection** - DATABASE_TOKEN as external boundary
-- ✅ **Class injection** - UserValidator and UserRepository
-
-## Running the Example
-
-```bash
-pnpm install --frozen-lockfile
+```sh
+pnpm install --frozen-lockfile --strict-peer-dependencies
 pnpm test
 ```
 
-All tests should pass, demonstrating both testing strategies with advanced mock configuration.
+The example installs published Suites v4 packages, checks TypeScript with `skipLibCheck: false`, and runs eleven tests. Each test gets a fresh TestBed.
 
-## Project Structure
-
-**`src/`** - Application code being tested:
-
-```
-src/
-├── types.ts              # User types and interfaces
-├── user.validator.ts     # Validation logic (no dependencies)
-├── user.repository.ts    # Data access (token injection)
-└── user.service.ts       # Business logic (class injections)
-```
-
-**`tests/`** - Tests demonstrating Suites advanced mock configuration:
-
-```
-tests/
-├── user.solitary.spec.ts # Solitary tests with .mock().final() and .mock().impl()
-└── user.sociable.spec.ts # Sociable tests with .mock().final() and .mock().impl()
-```
-
-## Mock Configuration Patterns
-
-### `.mock().final()` - Immutable Configuration
-
-Use when you want to **lock down** mock behavior that should never change:
+## Supply a value with `.final()`
 
 ```typescript
-const { unit, unitRef } = await TestBed.solitary(UserService)
+const { unit } = await TestBed.solitary(UserService)
   .mock(UserValidator)
-  .final({
-    // Plain functions - cannot be reconfigured in tests
-    validate: () => ({ isValid: true, errors: [] }),
-  })
+  .final({ validate: () => ({ isValid: true, errors: [] }) })
   .compile();
 ```
 
-**Key characteristics:**
+Suites injects the supplied implementation without generating a mock. It does not freeze the value or prevent you from changing an object you hold. Final dependencies cannot be retrieved through `unitRef`.
 
-- Functions provided to `.final()` are plain functions, not Jest mocks
-- Behavior is locked - tests cannot use `mockReturnValue()` or similar
-- Call inspection (`toHaveBeenCalled()`) is not available
-- Best for: external services, logging, fixed configuration values
+These examples supply plain functions, so they have no Jest call tracking or `mockReturnValue()` API. That follows from the supplied functions; `.final()` itself does not remove mock capabilities from values you supply.
 
-### `.mock().impl()` - Flexible Configuration
-
-Use when you want **sensible defaults** that tests can override:
+## Configure a mock with `.impl()`
 
 ```typescript
 const { unit, unitRef } = await TestBed.solitary(UserService)
   .mock(UserValidator)
-  .impl((stubFn) => ({
-    // Stubs - can be reconfigured and inspected in tests
-    validate: stubFn().mockReturnValue({ isValid: true, errors: [] }),
+  .impl(stub => ({
+    validate: stub().mockReturnValue({ isValid: true, errors: [] }),
   }))
   .compile();
 
-// Later in tests, you can override:
-validator.validate.mockReturnValue({ isValid: false, errors: ["Error"] });
+const validator = unitRef.get(UserValidator);
+validator.validate.mockReturnValue({ isValid: false, errors: ['Invalid email'] });
 ```
 
-**Key characteristics:**
+Use the callback's `stub` factory to configure behavior before compilation. Retrieve the mock through `unitRef` to change behavior or assert calls later.
 
-- Uses `stubFn()` factory to create Jest mock functions
-- Behavior is flexible - tests can reconfigure using `mockReturnValue()`, etc.
-- Call inspection (`toHaveBeenCalled()`, `toHaveBeenCalledWith()`) is available
-- Best for: most mocks where different tests need different behaviors
+| Pattern | Use when | Available through `unitRef` |
+| --- | --- | --- |
+| `.final(value)` | You want to supply a value or implementation | No |
+| `.impl(factory)` | You want a configurable mock with initial behavior | Yes |
 
-## Comparing Testing Strategies
+## Read the tests
 
-**When to use `.final()`:**
+- `tests/user.solitary.spec.ts`: supplies or mocks the validator while mocking the repository.
+- `tests/user.sociable.spec.ts`: exposes the real validator and repository, then supplies or mocks the database token.
 
-- External APIs (email, SMS, payments) - prevent accidental real calls
-- Configuration/settings - fixed test environment values
-- Logging/telemetry - consistent, predictable output
-
-**When to use `.impl()`:**
-
-- Database operations - need to simulate different query results
-- Collaborator services - need flexibility for different test scenarios
-- Any mock where behavior needs to vary per-test
-
-## Comparison Table
-
-| Feature              | `.final()`      | `.impl()`  |
-| -------------------- | --------------- | ---------- |
-| Reconfigurable       | ❌ No           | ✅ Yes     |
-| Call inspection      | ❌ No           | ✅ Yes     |
-| Function type        | Plain functions | Jest stubs |
-| `mockReturnValue()`  | ❌ Cannot use   | ✅ Can use |
-| `toHaveBeenCalled()` | ❌ Cannot use   | ✅ Can use |
-
-## Related Examples
-
-- [nestjs-jest](../nestjs-jest) - Basic NestJS + Jest example
-- [nestjs-vitest](../nestjs-vitest) - NestJS with Vitest
-- [inversify-jest](../inversify-jest) - InversifyJS with Jest
-
-## Learn More
-
-- [Suites Documentation](https://suites.dev)
-- [Mock Configuration API](https://suites.dev/docs/api-reference/mock-configuration)
-- [Test Doubles Guide](https://suites.dev/docs/guides/test-doubles)
+Application code is in `src/`. Neither test style calls an external database.
 
 ## Type references
 
-The included `global.d.ts` loads both the test-double types and the DI metadata types:
+The included `global.d.ts` loads:
 
 ```typescript
 /// <reference types="@suites/doubles.jest/unit" />
 /// <reference types="@suites/di.nestjs/metadata" />
 ```
 
-Keep this file included in your test `tsconfig.json`. Suites 4 does not modify declaration files during installation.
+Keep it included in your test tsconfig. Suites v4 does not patch declarations during installation.
+
+## Next steps
+
+- [Mock Configuration API](https://suites.dev/docs/api-reference/mock-configuration/)
+- [NestJS + Jest](../nestjs-jest)
+- [InjectionJS token overrides](../injectionjs-jest/tests/token-overrides.spec.ts)
+- [All examples](../README.md)

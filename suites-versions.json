@@ -1,0 +1,23 @@
+{
+  "packages": {
+    "@suites/core.unit": "4.1.0",
+    "@suites/di.inversify": "4.0.1",
+    "@suites/di.nestjs": "4.0.1",
+    "@suites/doubles.jest": "4.1.0",
+    "@suites/doubles.vitest": "4.1.0",
+    "@suites/types.common": "4.0.0",
+    "@suites/types.di": "4.1.0",
+    "@suites/types.doubles": "4.0.0",
+    "@suites/unit": "4.1.0",
+    "@suites/di.injectionjs": "4.1.0"
+  },
+  "examples": [
+    "advanced-mock-config",
+    "inversify-jest",
+    "inversify-vitest",
+    "nestjs-jest",
+    "nestjs-vitest",
+    "injectionjs-jest",
+    "injectionjs-vitest"
+  ]
+}

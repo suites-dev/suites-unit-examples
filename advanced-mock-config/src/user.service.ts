@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { Injectable } from "@nestjs/common";
 import { UserRepository } from "./user.repository";
 import { UserValidator } from "./user.validator";

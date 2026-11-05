@@ -5,16 +5,17 @@
   "type": "module",
   "description": "Suites InversifyJS + Vitest Example",
   "scripts": {
-    "test": "tsc --noEmit && vitest run"
+    "test": "tsc --noEmit && vitest run",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "inversify": "^8.2.3",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
-    "@suites/di.inversify": "4.0.0-next.0",
-    "@suites/doubles.vitest": "4.0.0-next.0",
-    "@suites/unit": "4.0.0-next.0",
+    "@suites/di.inversify": "4.0.1",
+    "@suites/doubles.vitest": "4.1.0",
+    "@suites/unit": "4.1.0",
     "@types/node": "^26.6.6",
     "typescript": "~6.0.3",
     "unplugin-swc": "^2.0.0",

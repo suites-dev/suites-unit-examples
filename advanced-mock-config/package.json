@@ -4,7 +4,8 @@
   "private": true,
   "description": "Suites Advanced Mock Configuration Example - .mock().final() and .mock().impl()",
   "scripts": {
-    "test": "tsc --noEmit && jest"
+    "test": "tsc --noEmit && jest",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@nestjs/common": "^12.0.1",
@@ -12,9 +13,9 @@
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
-    "@suites/di.nestjs": "4.0.0-next.0",
-    "@suites/doubles.jest": "4.0.0-next.0",
-    "@suites/unit": "4.0.0-next.0",
+    "@suites/di.nestjs": "4.0.1",
+    "@suites/doubles.jest": "4.1.0",
+    "@suites/unit": "4.1.0",
     "@types/jest": "^30.0.0",
     "jest": "30.5.2",
     "typescript": "~6.0.3",

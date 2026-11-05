@@ -17,16 +17,16 @@ describe('User Service Unit Spec (Sociable Tests)', () => {
    * PATTERN 1: Sociable test with .mock().final()
    *
    * Expose real collaborators (UserValidator, UserRepository) while
-   * using .final() to lock down the external boundary (Database).
+   * using .final() to supply the external boundary (Database).
    */
   describe('with .mock().final() on external boundary', () => {
     let userService: UserService;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
       const { unit } = await TestBed.sociable(UserService)
         .expose(UserValidator) // Real validation logic
         .expose(UserRepository) // Real repository logic
-        // Lock database behavior - external I/O should be predictable
+        // Supply predictable database behavior without external I/O
         .mock<Database>(DATABASE_TOKEN)
         .final({
           findByEmail: async () => null, // Always "user not found"
@@ -80,7 +80,7 @@ describe('User Service Unit Spec (Sociable Tests)', () => {
     let userService: UserService;
     let database: Mocked<Database>;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
       const { unit, unitRef } = await TestBed.sociable(UserService)
         .expose(UserValidator) // Real validation logic
         .expose(UserRepository) // Real repository logic
@@ -122,8 +122,6 @@ describe('User Service Unit Spec (Sociable Tests)', () => {
         })
       ).rejects.toThrow('User with this email already exists');
 
-      // Reset for next test
-      database.findByEmail.mockResolvedValue(null);
     });
 
     it('should still use real validator even with flexible database', async () => {
@@ -143,7 +141,7 @@ describe('User Service Unit Spec (Sociable Tests)', () => {
  *
  * .expose() + .mock().final():
  * - Real collaborators for business logic
- * - Locked mocks for external boundaries (DB, APIs)
+ * - Supplied implementations for external boundaries (DB, APIs)
  * - Consistent, predictable external behavior
  * - Best for: testing real interactions with fixed external state
  *

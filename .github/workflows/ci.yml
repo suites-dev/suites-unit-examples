@@ -11,65 +11,26 @@ permissions:
   contents: read
 
 jobs:
-  packages:
-    name: Build Suites packages from pinned master
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-      - name: Read source revision
-        id: source
-        run: node -e 'const c = require("./suites-source.json"); require("node:fs").appendFileSync(process.env.GITHUB_OUTPUT, `commit=${c.commit}\n`)'
-      - name: Checkout Suites source
-        uses: actions/checkout@v7
-        with:
-          repository: suites-dev/unit
-          ref: ${{ steps.source.outputs.commit }}
-          path: .suites-source
-          persist-credentials: false
-      - uses: actions/setup-node@v7
-        with:
-          node-version: "26.x"
-          package-manager-cache: false
-      - uses: pnpm/action-setup@v6
-        with:
-          version: 12.16.1
-      - name: Build and pack the actual package contents
-        run: node scripts/prepare-suites.mjs .suites-source
-      - uses: actions/upload-artifact@v7
-        with:
-          name: suites-packages
-          path: .suites-packages/
-          include-hidden-files: true
-          if-no-files-found: error
-
   test:
     name: Test ${{ matrix.example }} (Node ${{ matrix.node-version }})
-    needs: packages
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
         example:
-          [
-            advanced-mock-config,
-            inversify-jest,
-            inversify-vitest,
-            nestjs-jest,
-            nestjs-vitest,
-          ]
+          - advanced-mock-config
+          - inversify-jest
+          - inversify-vitest
+          - nestjs-jest
+          - nestjs-vitest
+          - injectionjs-jest
+          - injectionjs-vitest
         node-version: ["22.x", "24.x", "26.x"]
     steps:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
-      - uses: actions/download-artifact@v8
-        with:
-          name: suites-packages
-          path: .suites-packages/
       - uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node-version }}
@@ -77,7 +38,7 @@ jobs:
       - uses: pnpm/action-setup@v6
         with:
           version: 12.16.1
-      - name: Install dependencies from the packaged source
+      - name: Install published packages
         working-directory: ${{ matrix.example }}
         run: pnpm install --frozen-lockfile --strict-peer-dependencies
       - name: Verify Suites package versions and declarations

@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { injectable, inject } from 'inversify';
 import { Database, User, DATABASE_TOKEN } from './types';
 

@@ -6,7 +6,7 @@ Simple user management example demonstrating [Suites](https://suites.dev) with N
 
 - Node.js 22.22.2+, 24.15.0+, or 26.x
 - pnpm 12.16.1
-- Packed Suites source prepared with Node 26 using the [repository setup](../README.md#prepare-the-master-packages)
+- Published Suites v4 packages (installed by the commands below)
 
 ## What This Demonstrates
 
@@ -65,7 +65,7 @@ const { unit, unitRef } = await TestBed.sociable(UserService)
   .expose(UserValidator)
   .expose(UserRepository)
   .compile();
-const database: Mocked<Database> = unitRef.get(DATABASE_TOKEN);
+const database = unitRef.get<Database>(DATABASE_TOKEN);
 ```
 
 ## Comparing Testing Strategies
@@ -84,14 +84,17 @@ const database: Mocked<Database> = unitRef.get(DATABASE_TOKEN);
 
 ## Related Examples
 
+- [InjectionJS + Jest](../injectionjs-jest) - Constructor injection with typed tokens
+- [InjectionJS + Vitest](../injectionjs-vitest) - Token injection with Vitest
+
 - [nestjs-vitest](../nestjs-vitest) - Same framework with Vitest (faster execution)
 - [inversify-jest](../inversify-jest) - InversifyJS with Jest
 
 ## Learn More
 
 - [Suites Documentation](https://suites.dev)
-- [NestJS Integration](https://suites.dev/docs/nestjs)
-- [Testing Strategies](https://suites.dev/docs/testing-strategies)
+- [NestJS Integration](https://suites.dev/docs/get-started/installation/)
+- [Testing Strategies](https://suites.dev/docs/guides/)
 
 ## Type references
 

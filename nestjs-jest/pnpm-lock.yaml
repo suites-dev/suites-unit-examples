@@ -162,17 +162,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  '@suites/core.unit': file:../.suites-packages/suites-core.unit.tgz
-  '@suites/di.inversify': file:../.suites-packages/suites-di.inversify.tgz
-  '@suites/di.nestjs': file:../.suites-packages/suites-di.nestjs.tgz
-  '@suites/doubles.jest': file:../.suites-packages/suites-doubles.jest.tgz
-  '@suites/doubles.vitest': file:../.suites-packages/suites-doubles.vitest.tgz
-  '@suites/types.common': file:../.suites-packages/suites-types.common.tgz
-  '@suites/types.di': file:../.suites-packages/suites-types.di.tgz
-  '@suites/types.doubles': file:../.suites-packages/suites-types.doubles.tgz
-  '@suites/unit': file:../.suites-packages/suites-unit.tgz
-
 importers:
 
   .:
@@ -191,14 +180,14 @@ importers:
         specifier: 30.5.2
         version: 30.5.2(supports-color@8.1.1)
       '@suites/di.nestjs':
-        specifier: file:../.suites-packages/suites-di.nestjs.tgz
-        version: file:../.suites-packages/suites-di.nestjs.tgz(@nestjs/common@12.3.2(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(reflect-metadata@0.2.2)
+        specifier: 4.0.1
+        version: 4.0.1(@nestjs/common@12.3.2(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(reflect-metadata@0.2.2)
       '@suites/doubles.jest':
-        specifier: file:../.suites-packages/suites-doubles.jest.tgz
-        version: file:../.suites-packages/suites-doubles.jest.tgz(@jest/globals@30.5.2(supports-color@8.1.1))(jest@30.5.2(@types/node@26.6.6)(supports-color@8.1.1))
+        specifier: 4.1.0
+        version: 4.1.0(@jest/globals@30.5.2(supports-color@8.1.1))(jest@30.5.2(@types/node@26.6.6)(supports-color@8.1.1))
       '@suites/unit':
-        specifier: file:../.suites-packages/suites-unit.tgz
-        version: file:../.suites-packages/suites-unit.tgz
+        specifier: 4.1.0
+        version: 4.1.0
       '@swc/core':
         specifier: ^1.16.21
         version: 1.16.21
@@ -639,45 +628,38 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
-  '@suites/core.unit@file:../.suites-packages/suites-core.unit.tgz':
-    resolution: {integrity: sha512-CF7pwlvNAFAij8kXPYRWhJ26/jsw7tch0uRPZR8aR7qO6O7CJIqV8Ba+kUL98OSEGIBx5FCyf3cRT+dTkSr78g==, tarball: file:../.suites-packages/suites-core.unit.tgz}
-    version: 4.0.0-next.0
+  '@suites/core.unit@4.1.0':
+    resolution: {integrity: sha512-FjFVe+hKxjMzQHDyfMYj0DgbHAPRyacGZoIa1eLAQ4u7QAPNJ9xuuPh+iPyasheV3ccKdEslGFq98U3Xf4/Fyg==}
     engines: {node: ^22.22.2 || ^24.15.0 || ^26.0.0}
 
-  '@suites/di.nestjs@file:../.suites-packages/suites-di.nestjs.tgz':
-    resolution: {integrity: sha512-SM/V8K18w91UkwyfAdqx5WFqklgbxpDfchfoVTcXCTNnPWUgG+UoQhmwolwug/dEuPyuV/cBJ5VrgJMDVGdONw==, tarball: file:../.suites-packages/suites-di.nestjs.tgz}
-    version: 4.0.0-next.0
+  '@suites/di.nestjs@4.0.1':
+    resolution: {integrity: sha512-u3L8UleN71OJvPHRvTgI3IlYrVDfbXs4kCmLQgPkayDtGpVkamyBz6l2KxHgAMxSMcH269gs6ePRvDCSJJMX+g==}
     engines: {node: ^22.22.2 || ^24.15.0 || ^26.0.0}
     peerDependencies:
       '@nestjs/common': ^10.0.0 || ^11.0.0 || ^12.0.1
       reflect-metadata: <1.0.0
 
-  '@suites/doubles.jest@file:../.suites-packages/suites-doubles.jest.tgz':
-    resolution: {integrity: sha512-mCbV+M6gbEFFtrL0UrNId+T3lwzEDK7ftPQzqqjYNX/Khtyg281xesJNpKzKxLMMp2FcX+AFeTjYUCUYAO0V5A==, tarball: file:../.suites-packages/suites-doubles.jest.tgz}
-    version: 4.0.0-next.0
+  '@suites/doubles.jest@4.1.0':
+    resolution: {integrity: sha512-GpYzYHxtrZwGRzuLKP5Qys45aU1snqFOZSznQ1MAl1yCO19Si0Rrk7+7FbsMkBniQxqcxWWevbJymqdRjVdQ3g==}
     engines: {node: ^22.22.2 || ^24.15.0 || ^26.0.0}
     peerDependencies:
       '@jest/globals': ^30.5.2
       jest: ^30.5.2
 
-  '@suites/types.common@file:../.suites-packages/suites-types.common.tgz':
-    resolution: {integrity: sha512-X79x3K3JT4OhVWVBBuZUIsv6fxY/dSJpd1WKWlY/0EGQAUzu9Xf24inEyEYwxbWTZ+yEqLQcFbvhmJQI2JlDnQ==, tarball: file:../.suites-packages/suites-types.common.tgz}
-    version: 4.0.0-next.0
+  '@suites/types.common@4.0.0':
+    resolution: {integrity: sha512-arYKL+38ciAKjDhZQ9GFnAne1Bl6INTxoHe7xi62Jz+R7+XkyaHSK/NTt/uGMBfQtA+EzY2b05JSA/5sxdXdaA==}
     engines: {node: ^22.22.2 || ^24.15.0 || ^26.0.0}
 
-  '@suites/types.di@file:../.suites-packages/suites-types.di.tgz':
-    resolution: {integrity: sha512-oqAqko0Rj9HCMWsjHDcjBDPs8WAmpWoG/AA4KeYGSAK0tfqA3cZMDoeaoUXnjD6itUrEkh5TPpqQjANHB/DySQ==, tarball: file:../.suites-packages/suites-types.di.tgz}
-    version: 4.0.0-next.0
+  '@suites/types.di@4.1.0':
+    resolution: {integrity: sha512-96tf4bVEF76jGhnhLWgw6ZbhjLt0C6yVLE4Z3qZDcUkSAq1njopdkNsoRP2EVzFhtzt8WWtkZuPiy+y2j87A9A==}
     engines: {node: ^22.22.2 || ^24.15.0 || ^26.0.0}
 
-  '@suites/types.doubles@file:../.suites-packages/suites-types.doubles.tgz':
-    resolution: {integrity: sha512-KQ9og3psNkPT5p8UnU8eJJ0pVgf/eHVgfSF/nHuNnqzwZR5LS3sx+TSIkpwEbplzJQyIeGECZE9mgXDXxou5xw==, tarball: file:../.suites-packages/suites-types.doubles.tgz}
-    version: 4.0.0-next.0
+  '@suites/types.doubles@4.0.0':
+    resolution: {integrity: sha512-cqDdJi7NWxUVF60U0kBHsHEXVSk6GTmRU2m2ZO0cDnLp4o0dvlLgA4+hsQRMaxkuHiFrk7BsLrTtV2t0fKVX7Q==}
     engines: {node: ^22.22.2 || ^24.15.0 || ^26.0.0}
 
-  '@suites/unit@file:../.suites-packages/suites-unit.tgz':
-    resolution: {integrity: sha512-b9ByzMko1fuZbSQkPz1DHmlgpyR62zwu50V2WiXMA6XzfptdQnVE8amMt6W5nHhEByD6WObiW2LIunZhmYUeLQ==, tarball: file:../.suites-packages/suites-unit.tgz}
-    version: 4.0.0-next.0
+  '@suites/unit@4.1.0':
+    resolution: {integrity: sha512-HPci1kepyLeVDnwRTU42wb5R2tIZExgofB78EQgYUJFTPo59wH5kwnHXLJj4XSJ3qBSO4nKlQ+WoSPc4y+7wnw==}
     engines: {node: ^22.22.2 || ^24.15.0 || ^26.0.0}
 
   '@swc/core-darwin-arm64@1.16.21':
@@ -2281,44 +2263,44 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@suites/core.unit@file:../.suites-packages/suites-core.unit.tgz':
+  '@suites/core.unit@4.1.0':
     dependencies:
-      '@suites/types.common': file:../.suites-packages/suites-types.common.tgz
-      '@suites/types.di': file:../.suites-packages/suites-types.di.tgz
-      '@suites/types.doubles': file:../.suites-packages/suites-types.doubles.tgz
+      '@suites/types.common': 4.0.0
+      '@suites/types.di': 4.1.0
+      '@suites/types.doubles': 4.0.0
 
-  '@suites/di.nestjs@file:../.suites-packages/suites-di.nestjs.tgz(@nestjs/common@12.3.2(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(reflect-metadata@0.2.2)':
+  '@suites/di.nestjs@4.0.1(@nestjs/common@12.3.2(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(reflect-metadata@0.2.2)':
     dependencies:
       '@nestjs/common': 12.3.2(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1)
-      '@suites/types.common': file:../.suites-packages/suites-types.common.tgz
-      '@suites/types.di': file:../.suites-packages/suites-types.di.tgz
+      '@suites/types.common': 4.0.0
+      '@suites/types.di': 4.1.0
       reflect-metadata: 0.2.2
 
-  '@suites/doubles.jest@file:../.suites-packages/suites-doubles.jest.tgz(@jest/globals@30.5.2(supports-color@8.1.1))(jest@30.5.2(@types/node@26.6.6)(supports-color@8.1.1))':
+  '@suites/doubles.jest@4.1.0(@jest/globals@30.5.2(supports-color@8.1.1))(jest@30.5.2(@types/node@26.6.6)(supports-color@8.1.1))':
     dependencies:
       '@jest/globals': 30.5.2(supports-color@8.1.1)
-      '@suites/core.unit': file:../.suites-packages/suites-core.unit.tgz
-      '@suites/types.common': file:../.suites-packages/suites-types.common.tgz
-      '@suites/types.di': file:../.suites-packages/suites-types.di.tgz
-      '@suites/types.doubles': file:../.suites-packages/suites-types.doubles.tgz
+      '@suites/core.unit': 4.1.0
+      '@suites/types.common': 4.0.0
+      '@suites/types.di': 4.1.0
+      '@suites/types.doubles': 4.0.0
       jest: 30.5.2(@types/node@26.6.6)(supports-color@8.1.1)
 
-  '@suites/types.common@file:../.suites-packages/suites-types.common.tgz': {}
+  '@suites/types.common@4.0.0': {}
 
-  '@suites/types.di@file:../.suites-packages/suites-types.di.tgz':
+  '@suites/types.di@4.1.0':
     dependencies:
-      '@suites/types.common': file:../.suites-packages/suites-types.common.tgz
+      '@suites/types.common': 4.0.0
 
-  '@suites/types.doubles@file:../.suites-packages/suites-types.doubles.tgz':
+  '@suites/types.doubles@4.0.0':
     dependencies:
-      '@suites/types.common': file:../.suites-packages/suites-types.common.tgz
+      '@suites/types.common': 4.0.0
 
-  '@suites/unit@file:../.suites-packages/suites-unit.tgz':
+  '@suites/unit@4.1.0':
     dependencies:
-      '@suites/core.unit': file:../.suites-packages/suites-core.unit.tgz
-      '@suites/types.common': file:../.suites-packages/suites-types.common.tgz
-      '@suites/types.di': file:../.suites-packages/suites-types.di.tgz
-      '@suites/types.doubles': file:../.suites-packages/suites-types.doubles.tgz
+      '@suites/core.unit': 4.1.0
+      '@suites/types.common': 4.0.0
+      '@suites/types.di': 4.1.0
+      '@suites/types.doubles': 4.0.0
 
   '@swc/core-darwin-arm64@1.16.21':
     optional: true
