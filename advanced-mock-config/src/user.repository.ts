@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { Injectable, Inject } from '@nestjs/common';
 import { Database, User, DATABASE_TOKEN } from './types';
 

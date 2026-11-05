@@ -4,8 +4,9 @@ Simple user management example demonstrating [Suites](https://suites.dev) with N
 
 ## Prerequisites
 
-- Node.js 18 or higher
-- pnpm installed globally
+- Node.js 22.22.2+, 24.15.0+, or 26.x
+- pnpm 12.16.1
+- Published Suites v4 packages (installed by the commands below)
 
 ## What This Demonstrates
 
@@ -17,7 +18,7 @@ Simple user management example demonstrating [Suites](https://suites.dev) with N
 ## Running the Example
 
 ```bash
-pnpm install
+pnpm install --frozen-lockfile
 pnpm test
 ```
 
@@ -64,29 +65,44 @@ const { unit, unitRef } = await TestBed.sociable(UserService)
   .expose(UserValidator)
   .expose(UserRepository)
   .compile();
-const database: Mocked<Database> = unitRef.get(DATABASE_TOKEN);
+const database = unitRef.get<Database>(DATABASE_TOKEN);
 ```
 
 ## Comparing Testing Strategies
 
 **When to use Solitary:**
+
 - Testing component logic in isolation
 - Controlling all inputs for predictable results
 - Dependencies are slow or complex to set up
 
 **When to use Sociable:**
+
 - Verifying components work together correctly
 - Testing interactions between business logic components
 - Dependencies are fast
 
 ## Related Examples
 
+- [InjectionJS + Jest](../injectionjs-jest) - Constructor injection with typed tokens
+- [InjectionJS + Vitest](../injectionjs-vitest) - Token injection with Vitest
+
 - [nestjs-jest](../nestjs-jest) - Same framework with Jest
-- [nestjs-sinon](../nestjs-sinon) - Same framework with Sinon/Mocha
 - [inversify-vitest](../inversify-vitest) - InversifyJS with Vitest
 
 ## Learn More
 
 - [Suites Documentation](https://suites.dev)
-- [NestJS Integration](https://suites.dev/docs/nestjs)
-- [Testing Strategies](https://suites.dev/docs/testing-strategies)
+- [NestJS Integration](https://suites.dev/docs/get-started/installation/)
+- [Testing Strategies](https://suites.dev/docs/guides/)
+
+## Type references
+
+The included `global.d.ts` loads both the test-double types and the DI metadata types:
+
+```typescript
+/// <reference types="@suites/doubles.vitest/unit" />
+/// <reference types="@suites/di.nestjs/metadata" />
+```
+
+Keep this file included in your test `tsconfig.json`. Suites 4 does not modify declaration files during installation.

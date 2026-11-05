@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { injectable, inject } from 'inversify';
 import { UserRepository } from './user.repository';
 import { UserValidator } from './user.validator';

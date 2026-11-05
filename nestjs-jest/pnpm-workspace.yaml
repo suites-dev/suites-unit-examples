@@ -1,0 +1,11 @@
+# Each example installs independently from npm.
+packages: []
+minimumReleaseAgeExclude:
+  - '@suites/*'
+  - '@vitest/spy@5.1.0'
+  - '@vitest/mocker@5.1.0'
+  - 'vitest@5.1.0'
+allowBuilds:
+  '@swc/core': true
+  '@parcel/watcher': true
+  '@nestjs/core': false

@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { injectable } from 'inversify';
 import { CreateUserDto, UserValidationResult } from './types';
 

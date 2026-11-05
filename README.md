@@ -1,83 +1,81 @@
 # Suites Examples
 
-Real-world examples demonstrating [Suites](https://suites.dev) integration with popular dependency injection frameworks and test runners.
+Runnable [Suites](https://suites.dev) examples for NestJS, Inversify, and InjectionJS with Jest or Vitest. Each example uses the same user management domain to demonstrate solitary tests, sociable tests, and a mocked database boundary.
 
-Each example showcases [solitary](https://suites.dev/docs/api-reference/testbed-solitary) and [sociable](https://suites.dev/docs/api-reference/testbed-sociable) testing patterns using the same user management domain model.
+## Run an example
 
-If you are new to Suites, check out the [Getting Started](https://suites.dev/docs/getting-started) guide.
+Use Node.js `^22.22.2 || ^24.15.0 || ^26.0.0` and pnpm 12.16.1. From this repository:
 
-## Examples
-
-| Example                                        | DI Framework | Test Runner | Use When                                          |
-| ---------------------------------------------- | ------------ | ----------- | ------------------------------------------------- |
-| [nestjs-jest](./nestjs-jest)                   | NestJS       | Jest        | NestJS with Jest                                  |
-| [nestjs-vitest](./nestjs-vitest)               | NestJS       | Vitest      | NestJS with Vitest                                |
-| [nestjs-sinon](./nestjs-sinon)                 | NestJS       | Sinon       | NestJS with Sinon/Mocha                           |
-| [inversify-jest](./inversify-jest)             | InversifyJS  | Jest        | InversifyJS with Jest                             |
-| [inversify-vitest](./inversify-vitest)         | InversifyJS  | Vitest      | InversifyJS with Vitest                           |
-| [inversify-sinon](./inversify-sinon)           | InversifyJS  | Sinon       | InversifyJS with Sinon/Mocha                      |
-| [advanced-mock-config](./advanced-mock-config) | NestJS       | Jest        | Advanced `.mock().final()` and `.impl()` patterns |
-
-## Quick Start
-
-```bash
-# Clone and run any example
+```sh
 cd nestjs-jest
-pnpm install
+pnpm install --frozen-lockfile --strict-peer-dependencies
 pnpm test
 ```
 
-All tests should pass immediately, demonstrating both testing strategies.
+Each example installs the **published Suites v4 packages from npm**. No source checkout, local tarballs, or preparation step is needed. `pnpm test` checks TypeScript declarations with `skipLibCheck: false`, then runs the tests.
 
-## Testing Strategies
+New to Suites? Start with [Installation](https://suites.dev/docs/get-started/installation/) and [Quickstart](https://suites.dev/docs/get-started/quickstart/).
 
-Each example demonstrates two approaches:
+## Examples
 
-### Solitary Unit Tests
+| Example | Framework | Runner | Module configuration |
+| --- | --- | --- | --- |
+| [nestjs-jest](./nestjs-jest) | NestJS 12 | Jest 30 | CommonJS |
+| [nestjs-vitest](./nestjs-vitest) | NestJS 12 | Vitest 5 | ESM |
+| [inversify-jest](./inversify-jest) | Inversify 8 | Jest 30 | CommonJS |
+| [inversify-vitest](./inversify-vitest) | Inversify 8 | Vitest 5 | ESM |
+| [injectionjs-jest](./injectionjs-jest) | InjectionJS 2 | Jest 30 | CommonJS |
+| [injectionjs-vitest](./injectionjs-vitest) | InjectionJS 2 | Vitest 5 | ESM |
+| [advanced-mock-config](./advanced-mock-config) | NestJS 12 | Jest 30 | CommonJS |
+
+The advanced example focuses on `.mock().final()` and `.mock().impl()`. InjectionJS examples also demonstrate `InjectionToken` overrides and identity: two tokens with the same description remain different dependencies.
+
+These examples use the framework versions above. Suites also supports NestJS 10/11 and Inversify 7; the [Unit repository](https://github.com/suites-dev/unit) tests the full supported framework matrix. This repository's CI runs all seven examples on Node 22, 24, and 26, giving 21 jobs.
+
+## Suites versions
+
+The examples use `@suites/unit`, Jest/Vitest doubles, and the InjectionJS adapter at **4.1.0**. The NestJS and Inversify adapters use **4.0.1**. Shared packages follow Suites' independent versioning; not every package changes in each release.
+
+[suites-versions.json](./suites-versions.json) records the expected versions, including transitive packages. Each example has its own lockfile. Check an installation from the repository root:
+
+```sh
+node scripts/verify-suites.mjs nestjs-jest
+```
+
+The verifier checks installed Suites versions, absence of postinstall declaration patching, and the configured adapter declarations. When upgrading, update the package manifests and version record together, regenerate each lockfile, and run every example.
+
+## Type integration in v4
+
+Each example includes `global.d.ts` with exactly one doubles `/unit` reference and one DI `/metadata` reference. For NestJS with Jest:
+
+```typescript
+/// <reference types="@suites/doubles.jest/unit" />
+/// <reference types="@suites/di.nestjs/metadata" />
+```
+
+Use `@suites/doubles.vitest/unit` for Vitest, `@suites/di.inversify/metadata` for Inversify, or `@suites/di.injectionjs/metadata` for InjectionJS. Keep these declarations included in the test tsconfig. Suites no longer patches declarations during postinstall.
+
+Import `TestBed`, `Mocked`, and `Stub` from `@suites/unit` after loading the declarations. Standalone `mock()` and `stub()` helpers come from the doubles adapter. See the [v3 to v4 migration guide](https://suites.dev/docs/migration-guides/from-v3/) for existing projects. Sinon is no longer supported.
+
+## Testing strategies
+
+**Solitary tests** construct one class with all dependencies mocked:
 
 ```typescript
 const { unit, unitRef } = await TestBed.solitary(UserService).compile();
 ```
 
-Test one class in complete isolation. All dependencies are replaced with test doubles.
-
-**When to use:**
-
-- Testing component logic in isolation
-- Controlling all inputs for predictable results
-
-**Trade-off:** Does not verify interactions between components
-
-### Sociable Unit Tests
+**Sociable tests** keep selected collaborators real and mock external I/O:
 
 ```typescript
 const { unit, unitRef } = await TestBed.sociable(UserService)
-  .expose(UserValidator) // Use real validator
-  .expose(UserRepository) // Use real repository
+  .expose(UserValidator)
+  .expose(UserRepository)
   .compile();
+const database = unitRef.get<Database>(DATABASE_TOKEN);
 ```
 
-Test multiple classes together with their real collaborators. External I/O (databases, APIs, file systems) is replaced with test doubles to keep tests fast.
-
-**When to use:**
-
-- Verifying components work together correctly
-- Testing interactions between business logic components
-
-**Trade-off:** Slower execution, multiple failure points
-
-Both strategies are unit tests - they keep external I/O mocked and remain fast. Use both together for comprehensive coverage.
-
-## What Each Example Demonstrates
-
-- **Solitary unit tests** - Test one class in complete isolation with all dependencies mocked
-- **Sociable unit tests** - Test multiple classes together with real collaborators, external I/O mocked
-- **Type-safe mocking** - Full TypeScript support without manual setup
-- **Zero boilerplate** - No test module configuration required
-
-## Common Use Case
-
-All examples implement the same user management service with three key components:
+Every example uses this dependency graph:
 
 ```mermaid
 graph LR
@@ -86,73 +84,24 @@ graph LR
     UserRepository --> DATABASE_TOKEN
 ```
 
-- **UserService** - Business logic layer with validation and persistence
-- **UserValidator** - Email validation (no dependencies)
-- **UserRepository** - Data access layer (depends on database token)
+Application code lives in `src/`; runnable tests live in `tests/`. Tests build a fresh TestBed for each scenario to avoid sharing mock state.
 
-This consistent domain model makes it easy to compare different framework and test runner combinations.
+## InjectionJS boundaries
 
-## Repository Structure
+The adapter supports constructor injection with InjectionJS `^2.6.1`. Contextual `inject()` calls, provider factories, multi-providers, and production injector hierarchy rules are outside its scope. Optional constructor dependencies are mocked unless explicitly overridden.
 
-```
-examples/
-├── nestjs-jest/          # NestJS with Jest
-├── nestjs-vitest/        # NestJS with Vitest
-├── nestjs-sinon/         # NestJS with Sinon
-├── inversify-jest/       # InversifyJS with Jest
-├── inversify-vitest/     # InversifyJS with Vitest
-├── inversify-sinon/      # InversifyJS with Sinon
-└── advanced-mock-config/ # Advanced .mock().final() and .impl() patterns
-```
-
-Each example contains two directories:
-
-**`src/`** - Application code being tested:
-
-- `types.ts` - Domain types and interfaces
-- `user.service.ts` - Business logic layer
-- `user.validator.ts` - Validation logic
-- `user.repository.ts` - Data access layer
-
-**`tests/`** - Tests demonstrating Suites usage:
-
-- `user.solitary.spec.ts` - Solitary unit tests (all dependencies mocked)
-- `user.sociable.spec.ts` - Sociable unit tests (real collaborators, external I/O mocked)
-
-## Prerequisites
-
-- Node.js 18 or higher
-- pnpm installed globally
-- Basic understanding of TypeScript and dependency injection
+The Vitest example externalizes `injection-js` through `test.server.deps.external` so the adapter and test code share decorator and token identities. Keep this setting when copying its configuration.
 
 ## Troubleshooting
 
-### Tests fail after install
+- **Missing decorator metadata:** Keep `experimentalDecorators` and `emitDecoratorMetadata` enabled, use the included SWC transform, and load `reflect-metadata` before decorated classes.
+- **Missing `Mocked` or token types:** Check `global.d.ts` and the test tsconfig's `include` paths. Do not combine multiple DI or doubles augmentations in one TypeScript project.
+- **Installation errors:** Use a supported Node line and pnpm 12.16.1. Install inside the selected example directory.
+- **InjectionJS token not found:** Import the original token instance. Recreating a token with the same description does not identify the same dependency.
 
-1. Check Node.js version: `node --version` (requires 18+)
-2. Check pnpm: `pnpm --version`
-3. Clear and reinstall: `rm -rf node_modules && pnpm install`
-4. Verify working directory is the example directory, not repository root
+## Learn more
 
-### "reflect-metadata" errors (InversifyJS examples)
-
-InversifyJS requires decorator metadata. Configuration is already set in `tsconfig.json` and imports. If errors occur, verify:
-
-- `experimentalDecorators: true` in tsconfig.json
-- `emitDecoratorMetadata: true` in tsconfig.json
-- `import 'reflect-metadata'` at top of test files
-
-### Sinon tests show different output format
-
-Sinon uses Mocha test runner, which formats output differently than Jest/Vitest. All examples show 6 passing tests.
-
-### "Module not found" errors
-
-Run `pnpm install` in the specific example directory. Each example has standalone dependencies.
-
-## Learn More
-
-- [Suites Documentation](https://suites.dev)
-- [Testing Strategies Guide](https://suites.dev/docs/testing-strategies)
-- [NestJS Integration](https://suites.dev/docs/nestjs)
-- [InversifyJS Integration](https://suites.dev/docs/inversify)
+- [Solitary tests](https://suites.dev/docs/guides/solitary/)
+- [Sociable tests](https://suites.dev/docs/guides/sociable/)
+- [Mock configuration](https://suites.dev/docs/api-reference/mock-configuration/)
+- [InjectionJS guide](https://suites.dev/docs/guides/injectionjs/)

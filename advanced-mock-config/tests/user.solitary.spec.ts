@@ -13,20 +13,19 @@ import { UserValidationResult } from "../src/types";
 
 describe("User Service Unit Spec (Solitary Tests)", () => {
   /**
-   * PATTERN 1: Using .mock().final() for immutable mock configuration
+   * PATTERN 1: Using .mock().final() for supplied implementations
    *
-   * Use .final() when you want to lock down mock behavior that should
-   * never change across tests. The functions provided are plain functions,
-   * not Jest stubs, and cannot be reconfigured.
+   * Use .final() to inject the supplied value without generating a mock.
+   * These examples supply plain functions. Suites does not freeze the value,
+   * and it cannot be retrieved through unitRef.
    */
-  describe("with .mock().final() - immutable configuration", () => {
+  describe("with .mock().final() - supplied implementations", () => {
     let userService: UserService;
     let repository: Mocked<UserRepository>;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
       const { unit, unitRef } = await TestBed.solitary(UserService)
-        // Lock the validator to always return valid
-        // This behavior CANNOT be changed in individual tests
+        // Supply a validator implementation that always returns valid
         .mock(UserValidator)
         .final({
           validate: (): UserValidationResult => ({ isValid: true, errors: [] }),
@@ -39,7 +38,7 @@ describe("User Service Unit Spec (Solitary Tests)", () => {
       repository = unitRef.get(UserRepository);
     });
 
-    it("should create user when validation is locked to pass", async () => {
+    it("should create user when the supplied validator accepts the input", async () => {
       repository.exists.mockResolvedValue(false);
       repository.create.mockResolvedValue({
         id: 1,
@@ -79,7 +78,7 @@ describe("User Service Unit Spec (Solitary Tests)", () => {
     let repository: Mocked<UserRepository>;
     let validator: Mocked<UserValidator>;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
       const { unit, unitRef } = await TestBed.solitary(UserService)
         // Set up validator with a default that CAN be overridden
         .mock(UserValidator)
@@ -125,8 +124,6 @@ describe("User Service Unit Spec (Solitary Tests)", () => {
         userService.createUser({ email: "bad", name: "Test" })
       ).rejects.toThrow("Validation failed: Invalid email format");
 
-      // Reset to default for next test
-      validator.validate.mockReturnValue({ isValid: true, errors: [] });
     });
 
     it("should throw error when user exists - override default", async () => {
@@ -137,8 +134,6 @@ describe("User Service Unit Spec (Solitary Tests)", () => {
         userService.createUser({ email: "existing@example.com", name: "Test" })
       ).rejects.toThrow("User with this email already exists");
 
-      // Reset to default
-      repository.exists.mockResolvedValue(false);
     });
   });
 });
@@ -148,9 +143,9 @@ describe("User Service Unit Spec (Solitary Tests)", () => {
  *
  * .mock().final():
  * - Plain functions, not Jest stubs
- * - Cannot be reconfigured per-test
+ * - Supplied values cannot be retrieved through unitRef
  * - No call inspection (toHaveBeenCalled)
- * - Use for: locked behavior that must be consistent
+ * - Use for: supplied values and implementations
  *
  * .mock().impl():
  * - Jest stubs created via stubFn()
