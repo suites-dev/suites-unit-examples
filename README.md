@@ -34,7 +34,7 @@ These examples use the framework versions above. Suites also supports NestJS 10/
 
 ## Suites versions
 
-The examples use `@suites/unit`, Jest/Vitest doubles, and the InjectionJS adapter at **4.1.0**. The NestJS and Inversify adapters use **4.0.1**. Shared packages follow Suites' independent versioning; not every package changes in each release.
+The examples use `@suites/unit`, Core, and Jest/Vitest doubles at **4.1.3**. The InjectionJS adapter is **4.1.2**, and the NestJS and Inversify adapters are **4.0.3**. Shared packages follow Suites' independent versioning; not every package changes in each release.
 
 [suites-versions.json](./suites-versions.json) records the expected versions, including transitive packages. Each example has its own lockfile. Check an installation from the repository root:
 

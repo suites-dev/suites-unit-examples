@@ -66,5 +66,5 @@ assert(found.has("@suites/core.unit"));
 assert(found.has("@suites/types.di"));
 assert(found.has("@suites/types.doubles"));
 console.log(
-  `${example}: verified ${found.size} Suites packages from the published v4.1 release`,
+  `${example}: verified ${found.size} Suites packages from published Suites ${expected.get("@suites/unit")}`,
 );
